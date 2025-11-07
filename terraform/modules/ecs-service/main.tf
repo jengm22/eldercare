@@ -4,9 +4,18 @@ variable "task_exec_role_arn" { type = string }
 variable "task_role_arn"      { type = string }
 variable "image"              { type = string }
 variable "container_port"     { type = number }
-variable "desired_count"      { type = number, default = 2 }
-variable "cpu"                { type = number, default = 512 }
-variable "memory"             { type = number, default = 1024 }
+variable "desired_count" { 
+    type = number
+    default = 2 
+}
+variable "cpu" { 
+    type = number
+    default = 512 
+}
+variable "memory" { 
+    type = number 
+    default = 1024 
+}
 variable "vpc_id"             { type = string }
 variable "private_subnets"    { type = list(string) }
 variable "target_group_arn"   { type = string }
@@ -29,7 +38,12 @@ resource "aws_security_group" "svc" {
   description = "Service ingress from ALB"
   vpc_id      = var.vpc_id
   # Ingress added dynamically by ALB SG at runtime via TG; keep service open only to ALB SG if desired.
-  egress { from_port = 0, to_port = 0, protocol = "-1", cidr_blocks = ["0.0.0.0/0"] }
+  egress { 
+      from_port = 0
+      to_port = 0
+      protocol = "-1"
+      cidr_blocks = ["0.0.0.0/0"] 
+    }
 }
 
 resource "aws_ecs_task_definition" "td" {

@@ -1,6 +1,6 @@
 locals {
-  app_name      = "eldercare-backend"
-  container_port= 3001
+  app_name       = "eldercare-backend"
+  container_port = 3001
 }
 
 # Data sources
@@ -13,11 +13,11 @@ data "aws_caller_identity" "current" {}
 # VPC Module
 module "vpc" {
   source = "../../modules/vpc"
-  
-  environment         = var.environment
-  vpc_cidr            = var.vpc_cidr
-  availability_zones  = data.aws_availability_zones.available.names
-  public_subnet_cidrs = var.public_subnet_cidrs
+
+  environment          = var.environment
+  vpc_cidr             = var.vpc_cidr
+  availability_zones   = data.aws_availability_zones.available.names
+  public_subnet_cidrs  = var.public_subnet_cidrs
   private_subnet_cidrs = var.private_subnet_cidrs
 }
 
@@ -51,20 +51,20 @@ module "alb" {
 
 # ECS Service + Task
 module "svc" {
-  source               = "../../modules/ecs-service"
-  name                 = local.app_name
-  cluster_id           = module.cluster.id
-  task_exec_role_arn   = module.iam.execution_role_arn
-  task_role_arn        = module.iam.task_role_arn
-  image                = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/${module.ecr.name}:${var.image_tag}"
-  container_port       = local.container_port
-  desired_count        = 2
-  cpu                  = 512
-  memory               = 1024
-  vpc_id               = var.vpc_id
-  private_subnets      = var.private_subnets
-  target_group_arn     = module.alb.target_group_arn
-  region               = var.region
+  source             = "../../modules/ecs-service"
+  name               = local.app_name
+  cluster_id         = module.cluster.id
+  task_exec_role_arn = module.iam.execution_role_arn
+  task_role_arn      = module.iam.task_role_arn
+  image              = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/${module.ecr.name}:${var.image_tag}"
+  container_port     = local.container_port
+  desired_count      = 2
+  cpu                = 512
+  memory             = 1024
+  vpc_id             = var.vpc_id
+  private_subnets    = var.private_subnets
+  target_group_arn   = module.alb.target_group_arn
+  region             = var.region
 
   env_map = {
     NODE_ENV = "production"

@@ -4,7 +4,10 @@ variable "secrets_arns" { type = list(string) }
 data "aws_iam_policy_document" "assume" {
   statement {
     actions = ["sts:AssumeRole"]
-    principals { type = "Service", identifiers = ["ecs-tasks.amazonaws.com"] }
+    principals { 
+        type = "Service"
+        identifiers = ["ecs-tasks.amazonaws.com"] 
+    }
   }
 }
 

@@ -1,7 +1,0 @@
-aws_region             = "us-east-1"
-environment            = "production"
-db_password            = "CHANGE_ME_SecurePassword123!"
-jwt_secret             = "CHANGE_ME_random_64_character_jwt_secret_key_here_make_it_secure"
-stripe_secret_key      = "sk_test_YOUR_STRIPE_SECRET_KEY_HERE"
-stripe_publishable_key = "pk_test_YOUR_STRIPE_PUBLISHABLE_KEY_HERE"
-alarm_email            = "alerts@yourdomain.com"
