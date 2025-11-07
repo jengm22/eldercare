@@ -1,0 +1,44 @@
+{
+    "family": "eldercare-backend",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "512",
+    "memory": "1024",
+    "executionRoleArn": "arn:aws:iam::<acct>:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::<acct>:role/eldercare-task-role",
+    "containerDefinitions": [
+      {
+        "name": "backend",
+        "image": "<acct>.dkr.ecr.<region>.amazonaws.com/eldercare-backend:{{ git_sha }}",
+        "portMappings": [{ "containerPort": 3001 }],
+        "essential": true,
+        "environment": [
+          { "name": "NODE_ENV", "value": "production" },
+          { "name": "PORT", "value": "3001" }
+        ],
+        "secrets": [
+          { "name": "JWT_SECRET", "valueFrom": "arn:aws:secretsmanager:<region>:<acct>:secret:eldercare/prod-XXXXX:JWT_SECRET::" },
+          { "name": "MONGODB_URI", "valueFrom": "arn:aws:secretsmanager:<region>:<acct>:secret:eldercare/prod-XXXXX:MONGODB_URI::" },
+          { "name": "MONGODB_DB", "valueFrom": "arn:aws:secretsmanager:<region>:<acct>:secret:eldercare/prod-XXXXX:MONGODB_DB::" },
+          { "name": "FRONTEND_URL", "valueFrom": "arn:aws:secretsmanager:<region>:<acct>:secret:eldercare/prod-XXXXX:FRONTEND_URL::" },
+          { "name": "MONGO_MAX_POOL", "valueFrom": "arn:aws:secretsmanager:<region>:<acct>:secret:eldercare/prod-XXXXX:MONGO_MAX_POOL::" }
+        ],
+        "logConfiguration": {
+          "logDriver": "awslogs",
+          "options": {
+            "awslogs-region": "<region>",
+            "awslogs-group": "/ecs/eldercare-backend",
+            "awslogs-stream-prefix": "app"
+          }
+        },
+        "healthCheck": {
+          "command": ["CMD-SHELL", "curl -fsS http://localhost:3001/healthz || exit 1"],
+          "interval": 30,
+          "timeout": 5,
+          "retries": 3,
+          "startPeriod": 10
+        }
+      }
+    ]
+  }
+  
